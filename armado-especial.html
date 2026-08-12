@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Armado especial</title>
+  <link href="https://unpkg.com/primeng@17.18.0/resources/themes/lara-light-blue/theme.css" rel="stylesheet">
+  <link href="https://unpkg.com/primeicons@7.0.0/primeicons.css" rel="stylesheet" crossorigin="anonymous">
+  <style>
+    :root {
+      --primary-color: #3b82f6;
+      --primary-color-text: #ffffff;
+      --primary-50: #f5f9ff;
+      --primary-100: #d0e1fd;
+      --text-color: #4b5563;
+      --text-color-secondary: #6b7280;
+      --text-heading: #374151;
+      --surface-border: #dfe7ef;
+      --surface-50: #f9fafb;
+      --surface-100: #f3f4f6;
+      --surface-200: #e5e7eb;
+      --surface-300: #d1d5db;
+      --surface-700: #374151;
+      --surface-hover: #f6f9fc;
+      --breadcrumb-link: #3b82f6;
+      --breadcrumb-link-hover: #2563eb;
+      --breadcrumb-muted: #6b7280;
+      --btn-cancel: #8b9299;
+      --btn-success: #669b37;
+      --section-gap: 1rem;
+      --table-head-bg: var(--surface-50);
+      --table-head-text: var(--surface-700);
+      --table-border: var(--surface-200);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      min-height: 100vh;
+      font-family: var(--font-family, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
+      background: #fff;
+      color: var(--text-color);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .pi { font-style: normal; display: inline-block; min-width: 1em; line-height: 1; }
+
+    .page-shell { min-height: 100vh; display: flex; flex-direction: column; }
+    .page-content { flex: 1; max-width: 1200px; width: 100%; margin: 0 auto; padding: 1.5rem 2rem 2.5rem; }
+    .page-content--wide { max-width: 1280px; }
+
+    .breadcrumb { font-size: 0.875rem; color: var(--breadcrumb-muted); margin-bottom: 0.75rem; }
+    .breadcrumb ol { display: flex; flex-wrap: wrap; align-items: center; gap: 0.35rem; list-style: none; }
+    .breadcrumb li + li::before { content: "/"; margin-right: 0.35rem; color: var(--breadcrumb-muted); }
+    .breadcrumb a { color: var(--breadcrumb-link); text-decoration: none; }
+    .breadcrumb a:hover { color: var(--breadcrumb-link-hover); text-decoration: underline; }
+    .breadcrumb li[aria-current="page"] { color: var(--breadcrumb-muted); }
+
+    .page-title { font-size: 1.8rem; font-weight: 600; color: var(--text-heading); margin-bottom: 1.25rem; }
+    .page-header-row { display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem; }
+
+    .form-section { margin-bottom: 2rem; }
+    .section-head { padding-bottom: 0.6rem; margin-bottom: 1rem; border-bottom: 1px solid var(--surface-200); }
+    .section-title { font-size: 1.05rem; font-weight: 600; color: #334155; margin: 0; }
+
+    .form-grid { display: grid; gap: 1.25rem 1.5rem; }
+    .form-grid--3 { grid-template-columns: repeat(3, 1fr); }
+    .field { display: flex; flex-direction: column; gap: 0.35rem; min-width: 0; }
+    .field-label { font-size: 0.875rem; font-weight: 500; color: var(--text-color); }
+    .field-label .req { color: #dc2626; margin-left: 2px; }
+    .field-hint { font-size: 0.75rem; color: var(--text-color-secondary); }
+    .field-error { font-size: 0.75rem; color: #dc2626; }
+    .info-tip { position: relative; display: inline-flex; align-items: center; margin-left: 0.35rem; color: var(--text-color-secondary); cursor: pointer; }
+    .info-tip .pi { font-size: 1.05rem; }
+    .info-tip:hover, .info-tip:focus-within { color: #1e3a8a; }
+    .info-tip__bubble { position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%); background: #1e293b; color: #f8fafc; padding: 0.45rem 0.65rem; border-radius: 6px; font-size: 0.75rem; font-weight: 400; line-height: 1.35; width: max-content; max-width: 240px; opacity: 0; visibility: hidden; pointer-events: none; transition: opacity 0.15s ease; z-index: 60; box-shadow: 0 6px 18px rgba(15, 23, 42, 0.25); }
+    .info-tip__bubble::after { content: ""; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); border: 5px solid transparent; border-top-color: #1e293b; }
+    .info-tip:hover .info-tip__bubble, .info-tip:focus-within .info-tip__bubble { opacity: 1; visibility: visible; }
+    .info-tip--right .info-tip__bubble { left: auto; right: -0.4rem; transform: none; }
+    .info-tip--right .info-tip__bubble::after { left: auto; right: 0.55rem; transform: none; }
+    .info-tip--wide .info-tip__bubble { max-width: 320px; }
+    .field-inline { display: flex; align-items: center; gap: 0.5rem; }
+    .field-inline .form-input { flex: 1; min-width: 0; }
+
+    .form-input, .form-select {
+      width: 100%;
+      min-height: 2.25rem;
+      padding: 0.35rem 0.75rem;
+      font-size: 0.9rem;
+      border: 1px solid #ced4da;
+      border-radius: 6px;
+      background: #fff;
+      color: var(--text-color);
+      font-family: inherit;
+    }
+    .form-select { appearance: none; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'><path d='M6 9l6 6 6-6'/></svg>"); background-repeat: no-repeat; background-position: right 0.65rem center; padding-right: 2rem; cursor: pointer; }
+    .form-input:focus, .form-select:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 2px var(--primary-100); }
+    .form-input[readonly] { background: #f1f5f9; color: var(--text-color-secondary); }
+    .form-input:disabled, .form-input[disabled] { background: #f1f5f9; color: #94a3b8; border-color: #e2e8f0; cursor: not-allowed; opacity: 1; -webkit-text-fill-color: #94a3b8; }
+    .form-input.invalid, .form-select.invalid { border-color: #dc2626; box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.12); }
+
+    .input-affix { position: relative; display: flex; align-items: center; }
+    .input-affix .form-input { padding-right: 3.2rem; }
+    .input-affix__unit { position: absolute; right: 0.75rem; font-size: 0.8125rem; color: var(--text-color-secondary); pointer-events: none; }
+    .unit-cubic sup { font-size: 0.62em; vertical-align: super; line-height: 0; font-weight: 600; }
+
+    .form-actions { display: flex; gap: 0.75rem; margin-top: 2rem; flex-wrap: wrap; }
+    .btn { padding: 0.5rem 1.1rem; min-height: 2.25rem; border: 1px solid var(--surface-300); background: #fff; border-radius: 6px; font-size: 0.9rem; font-weight: 500; font-family: inherit; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 0.45rem; }
+    .btn-secondary { background: var(--btn-cancel); color: #fff; border-color: var(--btn-cancel); }
+    .btn-success { background: var(--btn-success); color: #fff; border-color: var(--btn-success); }
+    .btn-primary { background: var(--primary-color); color: #fff; border-color: var(--primary-color); font-weight: 600; }
+    .btn-primary:hover:not(:disabled) { background: #2563eb; }
+    .btn-outlined { background: #fff; color: #495057; border-color: #ced4da; font-weight: 500; }
+    .btn-outlined:hover:not(:disabled) { background: #f8fafc; border-color: #cbd5e1; }
+    .btn:disabled { opacity: 0.55; cursor: not-allowed; pointer-events: none; }
+
+    .checkbox-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.85rem 1.5rem; }
+    .checkbox-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; color: var(--text-color); cursor: pointer; }
+    .checkbox-item input { width: 1rem; height: 1rem; accent-color: var(--primary-color); cursor: pointer; }
+
+    /* Switch excluyente (Lógica de etiquetas) — alineado a InputSwitch Lara */
+    .switch-field { display: flex; flex-direction: column; gap: 0.35rem; }
+    .switch-row { display: flex; align-items: center; min-height: 2.25rem; }
+    .ui-switch {
+      position: relative;
+      width: 2.75rem;
+      height: 1.5rem;
+      border: none;
+      border-radius: 999px;
+      background: #ced4da;
+      cursor: pointer;
+      padding: 0;
+      flex-shrink: 0;
+      transition: background 0.2s ease;
+    }
+    .ui-switch:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--primary-100); }
+    .ui-switch[aria-checked="true"] { background: var(--primary-color); }
+    .ui-switch__thumb {
+      position: absolute;
+      top: 0.15rem;
+      left: 0.15rem;
+      width: 1.2rem;
+      height: 1.2rem;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.25);
+      transition: transform 0.2s ease;
+      pointer-events: none;
+    }
+    .ui-switch[aria-checked="true"] .ui-switch__thumb { transform: translateX(1.25rem); }
+
+    .info-callout { padding: 0.65rem 0.85rem; background: var(--surface-50); border: 1px solid var(--table-border); border-radius: 6px; font-size: 0.8125rem; color: var(--text-color-secondary); margin-bottom: 1rem; }
+    .info-callout p { margin: 0; }
+    .info-callout strong { color: var(--surface-700); }
+
+    .tarima-dims { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem 1.5rem; padding: 0.85rem; background: var(--surface-50); border: 1px solid var(--table-border); border-radius: 6px; }
+    .tarima-dims .field-label { font-size: 0.8125rem; }
+
+    .card { background: #fff; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); overflow: hidden; margin-top: var(--section-gap); }
+    .data-table-scroll-pane { width: 100%; overflow-x: auto; }
+    .data-table { border-collapse: collapse; font-size: 0.8125rem; width: 100%; min-width: 820px; }
+    .data-table th, .data-table td { padding: 0.65rem 0.75rem; text-align: left; border-bottom: 1px solid var(--table-border); vertical-align: middle; }
+    .data-table thead tr { background: var(--table-head-bg); }
+    .data-table thead th { font-weight: 700; color: var(--table-head-text); }
+    .data-table tbody tr:nth-child(even) { background: var(--surface-50); }
+    .data-table tbody tr:hover td { background: var(--surface-hover); }
+    .badge { display: inline-block; padding: 0.15rem 0.55rem; border-radius: 999px; font-size: 0.72rem; font-weight: 600; }
+    .badge--dona { background: #ecfccb; color: #3f6212; }
+    .badge--bultos { background: #dbeafe; color: #1e40af; }
+    .badge--familia { background: #fae8ff; color: #86198f; }
+
+    .row-actions { display: flex; align-items: center; gap: 0.15rem; }
+    .table-action-btn { display: inline-flex; align-items: center; justify-content: center; width: 2rem; height: 2rem; border: none; border-radius: 50%; background: transparent; color: var(--primary-color); cursor: pointer; }
+    .table-action-btn:hover { background: var(--primary-50); }
+    .table-action-btn--danger { color: #dc2626; }
+    .table-action-btn--danger:hover { background: #fef2f2; }
+
+    .view-hidden { display: none !important; }
+    .field-hidden { display: none !important; }
+
+    .toast { position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 1300; background: #1e293b; color: #f8fafc; padding: 0.85rem 1.1rem; border-radius: 8px; box-shadow: 0 8px 24px rgba(0,0,0,0.2); max-width: 420px; font-size: 0.85rem; }
+    .toast.hidden { display: none; }
+
+    .page-footer { margin-top: auto; padding: 0.65rem 1rem; text-align: center; font-size: 0.8rem; color: #9ca3af; background: #f3f4f6; border-top: 1px solid #e5e7eb; }
+
+    @media (max-width: 900px) {
+      .form-grid--3 { grid-template-columns: 1fr; }
+      .checkbox-grid { grid-template-columns: repeat(2, 1fr); }
+      .tarima-dims { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-shell">
+    <main class="page-content" id="mainContent">
+
+      <!-- FORMULARIO CREAR -->
+      <div id="formView">
+        <nav class="breadcrumb" aria-label="Ruta de navegación">
+          <ol>
+            <li><a href="#">Catálogos</a></li>
+            <li><a href="#">Armado especial</a></li>
+            <li aria-current="page" id="formBreadcrumbCurrent">Crear perfil de armado</li>
+          </ol>
+        </nav>
+        <h1 class="page-title" id="formPageTitle">Crear perfil de armado</h1>
+
+        <!-- Información básica -->
+        <section class="form-section">
+          <div class="section-head"><h2 class="section-title">Información básica</h2></div>
+          <div class="form-grid form-grid--3">
+            <div class="field">
+              <label class="field-label" for="fNombre">Nombre</label>
+              <input id="fNombre" type="text" class="form-input" maxlength="80" placeholder="Nombre del perfil">
+              <span class="field-error" id="fNombre-error" hidden></span>
+            </div>
+            <div class="field">
+              <label class="field-label" for="fDescripcion">Descripción</label>
+              <input id="fDescripcion" type="text" class="form-input" maxlength="150" placeholder="Descripción">
+            </div>
+            <div class="field">
+              <label class="field-label" for="fTipoArmado">Tipo de armado</label>
+              <select id="fTipoArmado" class="form-select">
+                <option value="">Selecciona un tipo</option>
+                <option value="dona">Armado de dona</option>
+                <option value="familia">Armado por familia</option>
+                <option value="tradicional-bultos">Armado tradicional y bultos</option>
+              </select>
+              <span class="field-error" id="fTipoArmado-error" hidden></span>
+            </div>
+            <!-- Matriz de densidad: posterior al Tipo de armado, solo para tradicional y bultos -->
+            <div class="field field-hidden" data-req-bultos id="wrapMatriz">
+              <label class="field-label" for="fMatriz">Matriz de densidad</label>
+              <select id="fMatriz" class="form-select">
+                <option value="">Selecciona una matriz de densidad</option>
+              </select>
+              <span class="field-error" id="fMatriz-error" hidden></span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Restricciones de armado -->
+        <section class="form-section">
+          <div class="section-head"><h2 class="section-title">Restricciones de armado</h2></div>
+          <div class="form-grid form-grid--3">
+            <div class="field">
+              <label class="field-label" for="fTipoTarima">Tipo de tarima</label>
+              <select id="fTipoTarima" class="form-select"></select>
+              <span class="field-error" id="fTipoTarima-error" hidden></span>
+            </div>
+
+            <div class="field field-hidden" data-req-bultos id="wrapAlturaMin">
+              <label class="field-label" for="fAlturaMin">Altura mínima del armado (cm)</label>
+              <input id="fAlturaMin" type="number" step="0.01" min="0" class="form-input" placeholder="Centímetros">
+              <span class="field-error" id="fAlturaMin-error" hidden></span>
+            </div>
+
+            <div class="field">
+              <label class="field-label" for="fAlturaMax">Altura máxima del armado (cm)</label>
+              <div class="field-inline">
+                <input id="fAlturaMax" type="number" step="0.01" min="0" class="form-input" placeholder="Centímetros">
+                <span class="info-tip info-tip--right" tabindex="0" role="note"><i class="pi pi-info-circle" aria-hidden="true"></i><span class="info-tip__bubble" id="fAlturaMax-tip">Al quedar vacío, se toma el valor menor entre la altura máxima de transporte, de la familia y de la posición.</span></span>
+              </div>
+              <span class="field-error" id="fAlturaMax-error" hidden></span>
+            </div>
+
+            <div class="field">
+              <label class="field-label" for="fCaraPrincipal">Lado de la cara principal</label>
+              <select id="fCaraPrincipal" class="form-select">
+                <option value="">Ninguno</option>
+                <option value="frontal">Frontal</option>
+                <option value="lateral">Lateral</option>
+              </select>
+            </div>
+            <div class="field">
+              <label class="field-label" for="fSuperficie">Superficie de apoyo (%)</label>
+              <input id="fSuperficie" type="number" step="0.01" class="form-input" value="70">
+            </div>
+            <div class="field">
+              <label class="field-label" for="fDesnivel">Desnivel entre cajas (cm)</label>
+              <input id="fDesnivel" type="number" step="0.01" class="form-input" value="1.5">
+            </div>
+            <div class="field">
+              <label class="field-label" for="fWallUsage">Wall usage factor (%)</label>
+              <input id="fWallUsage" type="number" step="0.01" class="form-input" placeholder="%">
+            </div>
+
+            <!-- Dimensiones derivadas de la tarima seleccionada -->
+            <div class="field field-hidden" data-req-bultos>
+              <label class="field-label" for="fTarimaAlto">Alto (cm)</label>
+              <input id="fTarimaAlto" type="text" class="form-input" disabled>
+            </div>
+            <div class="field field-hidden" data-req-bultos>
+              <label class="field-label" for="fTarimaAncho">Ancho (cm)</label>
+              <input id="fTarimaAncho" type="text" class="form-input" disabled>
+            </div>
+            <div class="field field-hidden" data-req-bultos>
+              <label class="field-label" for="fTarimaLargo">Largo (cm)</label>
+              <input id="fTarimaLargo" type="text" class="form-input" disabled>
+            </div>
+
+            <!-- Lógica de etiquetas: solo Armado tradicional y bultos -->
+            <div class="field field-hidden switch-field" data-req-bultos id="wrapLogicaEtiquetas">
+              <span class="field-label" id="fLogicaEtiquetasLabel">
+                Lógica de etiquetas
+                <span class="info-tip info-tip--right info-tip--wide" tabindex="0" role="note">
+                  <i class="pi pi-info-circle" aria-hidden="true"></i>
+                  <span class="info-tip__bubble">Habilita el uso de la lógica de etiquetas para tarimas y bultos</span>
+                </span>
+              </span>
+              <div class="switch-row">
+                <button
+                  type="button"
+                  class="ui-switch"
+                  id="fLogicaEtiquetas"
+                  role="switch"
+                  aria-checked="false"
+                  aria-labelledby="fLogicaEtiquetasLabel"
+                >
+                  <span class="ui-switch__thumb" aria-hidden="true"></span>
+                </button>
+              </div>
+              <span class="field-error" id="fLogicaEtiquetas-error" hidden></span>
+            </div>
+
+            <!-- Tipo de etiqueta: visible solo con lógica activada -->
+            <div class="field field-hidden" id="wrapTipoEtiqueta">
+              <label class="field-label" for="fTipoEtiqueta">
+                Tipo de etiqueta<span class="req" aria-hidden="true">*</span>
+              </label>
+              <select id="fTipoEtiqueta" class="form-select" disabled aria-required="true">
+                <option value="">Selecciona un tipo de etiqueta</option>
+              </select>
+              <span class="field-error" id="fTipoEtiqueta-error" hidden></span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Restricciones de bultos -->
+        <section class="form-section field-hidden" data-req-bultos id="bultosSection">
+          <div class="section-head"><h2 class="section-title">Restricciones de bultos</h2></div>
+          <div class="form-grid form-grid--3">
+            <div class="field">
+              <label class="field-label" for="fPesoMax">Peso máximo (kg)</label>
+              <input id="fPesoMax" type="number" step="0.01" min="0" class="form-input" placeholder="0.00">
+              <span class="field-error" id="fPesoMax-error" hidden></span>
+            </div>
+            <div class="field">
+              <label class="field-label" for="fVolumenMax">Volumen máximo (<span class="unit-cubic">m<sup>3</sup></span>)</label>
+              <input id="fVolumenMax" type="number" step="0.001" min="0" class="form-input" placeholder="0.000">
+              <span class="field-error" id="fVolumenMax-error" hidden></span>
+            </div>
+            <div class="field">
+              <label class="field-label" for="fContenedores">Contenedores máximos por tarima</label>
+              <input id="fContenedores" type="number" step="1" min="1" class="form-input" placeholder="0">
+              <span class="field-error" id="fContenedores-error" hidden></span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Configuraciones de transporte -->
+        <section class="form-section">
+          <div class="section-head"><h2 class="section-title">Configuraciones de transporte</h2></div>
+          <div class="checkbox-grid" id="transportGrid"></div>
+        </section>
+
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary" id="cancelBtn">Cancelar</button>
+          <button type="button" class="btn btn-success" id="submitBtn">Crear</button>
+        </div>
+      </div>
+
+    </main>
+    <footer class="page-footer">3.35.134 ©Netlogistik 2026</footer>
+  </div>
+
+  <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+
+  <script>
+    (function () {
+      var STORAGE_KEY = 'armadoEspecialProfiles';
+      var DENSITY_KEY = 'densityMatricesCatalog';
+      var LABEL_TYPES_KEY = 'opsLabelTypesCatalog_v1';
+      var CURRENT_USER = 'admin.wms';
+
+      /* ---- Catálogo de tarimas (Catálogo de Tarimas) ---- */
+      var TARIMAS = [
+        { id: '', nombre: 'Ninguno', alto: null, ancho: null, largo: null },
+        { id: 'std-1210', nombre: 'Tarima estándar 1200x1000', alto: 14.5, ancho: 100, largo: 120 },
+        { id: 'usa-1208', nombre: 'Tarima americana 1200x800', alto: 14.4, ancho: 80, largo: 120 },
+        { id: 'eur-800', nombre: 'Tarima europea 800x1200', alto: 14.4, ancho: 80, largo: 120 },
+        { id: 'media-608', nombre: 'Media tarima 600x800', alto: 13.8, ancho: 60, largo: 80 }
+      ];
+
+      /* ---- Configuraciones de transporte con altura máxima (cm) ---- */
+      var TRANSPORTS = [
+        { id: 'predeterminado', label: 'Predeterminado', maxHeight: 220 },
+        { id: '15T', label: '15T', maxHeight: 200 },
+        { id: '35T', label: '35T', maxHeight: 240 },
+        { id: 'RBN', label: 'RBN', maxHeight: 210 },
+        { id: 'THN', label: 'THN', maxHeight: 190 },
+        { id: '48T', label: '48T', maxHeight: 250 },
+        { id: '53T', label: '53T', maxHeight: 260 }
+      ];
+
+      /* ---- Alturas de referencia del contexto del producto/posición (demo; reemplazables por datos reales de API) ---- */
+      var CONTEXTO_PRODUCTO = { alturaMaxFamilia: 160, alturaMaxPosicion: 180 };
+
+      /* ---- Configuración del cliente DHL (contexto fijo del proto; en el sistema real vendría del contexto de sesión) ---- */
+      var SITE_DEFAULTS = { alturaMin: 80, pesoMax: 24, volumenMax: 0.96 };
+
+      var editingId = null;
+
+      /* ---- Matrices de densidad activas (del catálogo compartido) ---- */
+      function getActiveMatrices() {
+        var list = [];
+        try {
+          var raw = localStorage.getItem(DENSITY_KEY);
+          if (raw) {
+            list = JSON.parse(raw).filter(function (m) {
+              return !m.deleted && (m.estatus === undefined || m.estatus === 'Activa');
+            }).map(function (m) { return { id: m.id, nombre: m.nombre }; });
+          }
+        } catch (e) { list = []; }
+        if (!list.length) {
+          list = [
+            { id: 'MAT-DON-01', nombre: 'Matriz estándar dona' },
+            { id: 'MAT-BUL-01', nombre: 'Matriz bultos CD México' },
+            { id: 'MAT-BUL-02', nombre: 'Matriz bultos exportación' }
+          ];
+        }
+        return list;
+      }
+
+      /* ---- Tipos de etiqueta activos (catálogo de tipos de etiquetas) ---- */
+      function getActiveLabelTypes() {
+        var list = [];
+        try {
+          var raw = localStorage.getItem(LABEL_TYPES_KEY);
+          if (raw) {
+            list = JSON.parse(raw).filter(function (t) {
+              return t && !t.deleted && (t.status === 'Activo' || t.estatus === 'Activo');
+            }).map(function (t) {
+              return { id: t.id, nombre: t.nombre || t.name || t.id };
+            });
+          }
+        } catch (e) { list = []; }
+        if (!list.length) {
+          list = [
+            { id: 'TE-STD', nombre: 'Estándar' },
+            { id: 'TE-ESP', nombre: 'Armado especial' },
+            { id: 'TE-FRAG', nombre: 'Frágil' },
+            { id: 'TE-PRI', nombre: 'Prioritaria' },
+            { id: 'TE-TEMP', nombre: 'Temperatura' },
+            { id: 'TE-RFID', nombre: 'RFID' },
+            { id: 'TE-QR', nombre: 'QR logística' }
+          ];
+        }
+        return list;
+      }
+
+      /* ---- Persistencia de perfiles ---- */
+      function seedProfiles() {
+        return [
+          { id: 'AE-001', nombre: 'Armado dona nacional', tipoArmado: 'dona', matriz: '', tipoTarima: 'std-1210', updatedBy: 'jperez' },
+          { id: 'AE-002', nombre: 'Bultos DHL centro', tipoArmado: 'tradicional-bultos', matriz: 'MAT-BUL-01', tipoTarima: 'usa-1208', alturaMin: 80, alturaMax: 160, pesoMax: 24, volumenMax: 0.96, contenedores: 12, updatedBy: 'mlopez' }
+        ];
+      }
+      var Store = {
+        load: function () {
+          try {
+            var raw = localStorage.getItem(STORAGE_KEY);
+            if (!raw) { var s = seedProfiles(); localStorage.setItem(STORAGE_KEY, JSON.stringify(s)); return s; }
+            return JSON.parse(raw);
+          } catch (e) { return seedProfiles(); }
+        },
+        saveAll: function (r) { localStorage.setItem(STORAGE_KEY, JSON.stringify(r)); },
+        getById: function (id) { return Store.load().find(function (r) { return r.id === id; }) || null; },
+        upsert: function (rec) {
+          var all = Store.load();
+          var idx = all.findIndex(function (r) { return r.id === rec.id; });
+          if (idx === -1) all.push(rec); else all[idx] = rec;
+          Store.saveAll(all);
+        },
+        remove: function (id) { Store.saveAll(Store.load().filter(function (r) { return r.id !== id; })); }
+      };
+
+      /* ---- Helpers ---- */
+      function $(id) { return document.getElementById(id); }
+      function tipoLabel(t) {
+        return t === 'dona' ? 'Armado de dona' : t === 'familia' ? 'Armado por familia' : t === 'tradicional-bultos' ? 'Armado tradicional y bultos' : '—';
+      }
+      function tipoBadge(t) {
+        var cls = t === 'dona' ? 'badge--dona' : t === 'familia' ? 'badge--familia' : 'badge--bultos';
+        return '<span class="badge ' + cls + '">' + tipoLabel(t) + '</span>';
+      }
+      function matrizNombre(id) {
+        var m = getActiveMatrices().find(function (x) { return x.id === id; });
+        return m ? m.nombre : (id || '—');
+      }
+      function tarimaNombre(id) {
+        var t = TARIMAS.find(function (x) { return x.id === id; });
+        return t ? t.nombre : 'Ninguno';
+      }
+      function showToast(msg) {
+        var el = $('toast'); el.textContent = msg; el.classList.remove('hidden');
+        clearTimeout(showToast._t); showToast._t = setTimeout(function () { el.classList.add('hidden'); }, 3500);
+      }
+      function setError(id, msg) {
+        var input = $(id), err = $(id + '-error');
+        if (input) input.classList.toggle('invalid', !!msg);
+        if (err) { err.textContent = msg || ''; err.hidden = !msg; }
+      }
+      function clearErrors() {
+        ['fNombre', 'fTipoArmado', 'fMatriz', 'fTipoTarima', 'fAlturaMin', 'fAlturaMax', 'fPesoMax', 'fVolumenMax', 'fContenedores', 'fTipoEtiqueta', 'fLogicaEtiquetas']
+          .forEach(function (id) { setError(id, ''); });
+      }
+
+      /* ---- Poblado de selects ---- */
+      function populateMatrices() {
+        var sel = $('fMatriz');
+        var current = sel.value;
+        sel.innerHTML = '<option value="">Selecciona una matriz de densidad</option>';
+        getActiveMatrices().forEach(function (m) {
+          var o = document.createElement('option');
+          o.value = m.id; o.textContent = m.nombre;
+          sel.appendChild(o);
+        });
+        sel.value = current;
+      }
+      function populateTarimas() {
+        var sel = $('fTipoTarima');
+        sel.innerHTML = '';
+        TARIMAS.forEach(function (t) {
+          var o = document.createElement('option');
+          o.value = t.id; o.textContent = t.nombre;
+          sel.appendChild(o);
+        });
+      }
+      function populateTipoEtiqueta() {
+        var sel = $('fTipoEtiqueta');
+        var current = sel.value;
+        sel.innerHTML = '<option value="">Selecciona un tipo de etiqueta</option>';
+        getActiveLabelTypes().forEach(function (t) {
+          var o = document.createElement('option');
+          o.value = t.id; o.textContent = t.nombre;
+          sel.appendChild(o);
+        });
+        if (current && Array.prototype.some.call(sel.options, function (o) { return o.value === current; })) {
+          sel.value = current;
+        }
+      }
+      function isLogicaEtiquetasOn() {
+        return $('fLogicaEtiquetas').getAttribute('aria-checked') === 'true';
+      }
+      function setLogicaEtiquetas(on) {
+        $('fLogicaEtiquetas').setAttribute('aria-checked', on ? 'true' : 'false');
+        refreshTipoEtiquetaVisibility();
+      }
+      function refreshTipoEtiquetaVisibility() {
+        var show = isBultos() && isLogicaEtiquetasOn();
+        var wrap = $('wrapTipoEtiqueta');
+        wrap.classList.toggle('field-hidden', !show);
+        $('fTipoEtiqueta').disabled = !show;
+        if (!show) {
+          $('fTipoEtiqueta').value = '';
+          setError('fTipoEtiqueta', '');
+        } else {
+          populateTipoEtiqueta();
+        }
+      }
+      function buildTransportGrid() {
+        var grid = $('transportGrid');
+        grid.innerHTML = '';
+        TRANSPORTS.forEach(function (t) {
+          var label = document.createElement('label');
+          label.className = 'checkbox-item';
+          label.innerHTML = '<input type="checkbox" value="' + t.id + '" data-transport> <span>' + t.label + '</span>';
+          grid.appendChild(label);
+        });
+        grid.addEventListener('change', updateAlturaMaxPlaceholder);
+      }
+
+      /* ---- Dimensiones de la tarima ---- */
+      function applyTarimaDims() {
+        var t = TARIMAS.find(function (x) { return x.id === $('fTipoTarima').value; });
+        var alto = t && t.alto != null ? t.alto : '';
+        var ancho = t && t.ancho != null ? t.ancho : '';
+        var largo = t && t.largo != null ? t.largo : '';
+        $('fTarimaAlto').value = alto === '' ? 'No aplica' : alto;
+        $('fTarimaAncho').value = ancho === '' ? 'No aplica' : ancho;
+        $('fTarimaLargo').value = largo === '' ? 'No aplica' : largo;
+      }
+
+      /* ---- Altura máxima efectiva: mínimo entre transporte, familia y posición ---- */
+      function alturaMaxTransporte() {
+        var checked = Array.prototype.slice.call(document.querySelectorAll('[data-transport]:checked'));
+        if (!checked.length) return Infinity; // sin transporte seleccionado = sin restricción
+        return checked.reduce(function (min, cb) {
+          var t = TRANSPORTS.find(function (x) { return x.id === cb.value; });
+          return t ? Math.min(min, t.maxHeight) : min;
+        }, Infinity);
+      }
+      function computeAlturaMaxEfectiva() {
+        var candidatos = [alturaMaxTransporte(), CONTEXTO_PRODUCTO.alturaMaxFamilia, CONTEXTO_PRODUCTO.alturaMaxPosicion]
+          .filter(function (v) { return v !== Infinity && v != null && !isNaN(v); });
+        if (!candidatos.length) return null;
+        return Math.min.apply(null, candidatos);
+      }
+      function updateAlturaMaxPlaceholder() {
+        var efectiva = computeAlturaMaxEfectiva();
+        var tip = $('fAlturaMax-tip');
+        if (tip) {
+          tip.textContent = efectiva == null
+            ? 'Al quedar vacío, se toma el valor menor entre la altura máxima de transporte, de la familia y de la posición.'
+            : 'Al quedar vacío, se usarán ' + efectiva + ' cm (el valor menor entre la altura máxima de transporte, de la familia y de la posición).';
+        }
+      }
+
+      /* ---- Visibilidad condicional por tipo de armado ---- */
+      function isBultos() { return $('fTipoArmado').value === 'tradicional-bultos'; }
+      function refreshConditionalFields() {
+        var show = isBultos();
+        document.querySelectorAll('[data-req-bultos]').forEach(function (el) {
+          if (el.classList.contains('req')) { el.style.display = show ? '' : 'none'; }
+          else { el.classList.toggle('field-hidden', !show); }
+        });
+        if (show) applyTarimaDims();
+        if (!show) setLogicaEtiquetas(false);
+        else refreshTipoEtiquetaVisibility();
+      }
+
+      /* ---- Precarga de la configuración DHL (solo al crear, tipo bultos, sin sobrescribir lo escrito) ---- */
+      function applySiteDefaults() {
+        if (editingId !== null) return;           // no precargar en modo edición
+        if (!isBultos()) return;                  // solo para "Armado tradicional y bultos"
+        if ($('fAlturaMin').value === '') $('fAlturaMin').value = SITE_DEFAULTS.alturaMin;
+        if ($('fPesoMax').value === '') $('fPesoMax').value = SITE_DEFAULTS.pesoMax;
+        if ($('fVolumenMax').value === '') $('fVolumenMax').value = SITE_DEFAULTS.volumenMax;
+      }
+
+      /* ---- Formulario ---- */
+      function resetForm() {
+        ['fNombre', 'fDescripcion', 'fMatriz', 'fAlturaMin', 'fAlturaMax', 'fWallUsage', 'fPesoMax', 'fVolumenMax', 'fContenedores']
+          .forEach(function (id) { $(id).value = ''; });
+        $('fTipoArmado').value = 'tradicional-bultos'; // por defecto muestra los campos de bultos
+        $('fCaraPrincipal').value = '';
+        $('fSuperficie').value = '70';
+        $('fDesnivel').value = '1.5';
+        $('fTipoTarima').value = '';
+        document.querySelectorAll('[data-transport]').forEach(function (cb) { cb.checked = false; });
+        setLogicaEtiquetas(false);
+        clearErrors();
+        applyTarimaDims();
+        refreshConditionalFields();
+        updateAlturaMaxPlaceholder();
+      }
+
+      function loadProfile(rec) {
+        $('fNombre').value = rec.nombre || '';
+        $('fDescripcion').value = rec.descripcion || '';
+        $('fTipoArmado').value = rec.tipoArmado || '';
+        refreshConditionalFields();
+        populateMatrices();
+        $('fMatriz').value = rec.matriz || '';
+        $('fTipoTarima').value = rec.tipoTarima || '';
+        applyTarimaDims();
+        $('fAlturaMin').value = rec.alturaMin != null ? rec.alturaMin : '';
+        $('fAlturaMax').value = rec.alturaMax != null ? rec.alturaMax : '';
+        $('fCaraPrincipal').value = rec.caraPrincipal || '';
+        $('fSuperficie').value = rec.superficie != null ? rec.superficie : '70';
+        $('fDesnivel').value = rec.desnivel != null ? rec.desnivel : '1.5';
+        $('fWallUsage').value = rec.wallUsage != null ? rec.wallUsage : '';
+        $('fPesoMax').value = rec.pesoMax != null ? rec.pesoMax : '';
+        $('fVolumenMax').value = rec.volumenMax != null ? rec.volumenMax : '';
+        $('fContenedores').value = rec.contenedores != null ? rec.contenedores : '';
+        document.querySelectorAll('[data-transport]').forEach(function (cb) {
+          cb.checked = (rec.transportes || []).indexOf(cb.value) !== -1;
+        });
+        setLogicaEtiquetas(!!rec.logicaEtiquetas);
+        if (rec.logicaEtiquetas) {
+          populateTipoEtiqueta();
+          $('fTipoEtiqueta').value = rec.tipoEtiqueta || '';
+        }
+        updateAlturaMaxPlaceholder();
+      }
+
+      function validate() {
+        clearErrors();
+        var ok = true;
+        if (!$('fNombre').value.trim()) { setError('fNombre', 'El nombre es obligatorio.'); ok = false; }
+        if (!$('fTipoArmado').value) { setError('fTipoArmado', 'El tipo de armado es obligatorio.'); ok = false; }
+
+        // Altura máxima: opcional para todos, pero si se indica debe ser >= 0
+        var maxVal = $('fAlturaMax').value;
+        if (maxVal !== '' && Number(maxVal) < 0) { setError('fAlturaMax', 'Debe ser un valor decimal positivo (>= 0).'); ok = false; }
+
+        if (isBultos()) {
+          if (!$('fMatriz').value) { setError('fMatriz', 'Selecciona una matriz de densidad.'); ok = false; }
+          if (!$('fTipoTarima').value) { setError('fTipoTarima', 'Selecciona el tipo de tarima.'); ok = false; }
+
+          var minVal = $('fAlturaMin').value;
+          if (minVal === '') { setError('fAlturaMin', 'La altura mínima es obligatoria.'); ok = false; }
+          else if (Number(minVal) < 0) { setError('fAlturaMin', 'Debe ser un valor decimal positivo (>= 0).'); ok = false; }
+
+          var peso = $('fPesoMax').value;
+          if (peso === '') { setError('fPesoMax', 'El peso máximo es obligatorio.'); ok = false; }
+          else if (Number(peso) <= 0) { setError('fPesoMax', 'Debe ser un valor decimal positivo.'); ok = false; }
+
+          var vol = $('fVolumenMax').value;
+          if (vol === '') { setError('fVolumenMax', 'El volumen máximo es obligatorio.'); ok = false; }
+          else if (Number(vol) <= 0) { setError('fVolumenMax', 'Debe ser un valor decimal positivo.'); ok = false; }
+
+          var cont = $('fContenedores').value;
+          if (cont === '') { setError('fContenedores', 'Los contenedores máximos son obligatorios.'); ok = false; }
+          else if (!Number.isInteger(Number(cont)) || Number(cont) <= 0) { setError('fContenedores', 'Debe ser un número entero positivo.'); ok = false; }
+
+          if (isLogicaEtiquetasOn()) {
+            if (!$('fTipoEtiqueta').value) {
+              setError('fTipoEtiqueta', 'Selecciona un tipo de etiqueta.');
+              ok = false;
+            }
+          }
+        }
+        return ok;
+      }
+
+      function collectValues() {
+        var transportes = Array.prototype.slice.call(document.querySelectorAll('[data-transport]:checked')).map(function (c) { return c.value; });
+        var bultos = isBultos();
+        return {
+          nombre: $('fNombre').value.trim(),
+          descripcion: $('fDescripcion').value.trim(),
+          tipoArmado: $('fTipoArmado').value,
+          matriz: bultos ? $('fMatriz').value : '',
+          tipoTarima: $('fTipoTarima').value,
+          alturaMin: bultos && $('fAlturaMin').value !== '' ? Number($('fAlturaMin').value) : null,
+          alturaMax: $('fAlturaMax').value !== '' ? Number($('fAlturaMax').value) : computeAlturaMaxEfectiva(),
+          caraPrincipal: $('fCaraPrincipal').value,
+          superficie: $('fSuperficie').value !== '' ? Number($('fSuperficie').value) : null,
+          desnivel: $('fDesnivel').value !== '' ? Number($('fDesnivel').value) : null,
+          wallUsage: $('fWallUsage').value !== '' ? Number($('fWallUsage').value) : null,
+          pesoMax: bultos && $('fPesoMax').value !== '' ? Number($('fPesoMax').value) : null,
+          volumenMax: bultos && $('fVolumenMax').value !== '' ? Number($('fVolumenMax').value) : null,
+          contenedores: bultos && $('fContenedores').value !== '' ? Number($('fContenedores').value) : null,
+          logicaEtiquetas: bultos ? isLogicaEtiquetasOn() : false,
+          tipoEtiqueta: bultos && isLogicaEtiquetasOn() ? $('fTipoEtiqueta').value : '',
+          transportes: transportes,
+          updatedBy: CURRENT_USER
+        };
+      }
+
+      /* ---- Formulario (única vista, siempre en modo creación) ---- */
+      function openCreate() {
+        editingId = null;
+        resetForm();
+        populateMatrices();
+        applySiteDefaults();
+        $('formPageTitle').textContent = 'Crear perfil de armado';
+        $('formBreadcrumbCurrent').textContent = 'Crear perfil de armado';
+        $('submitBtn').textContent = 'Crear';
+      }
+
+      /* ---- Eventos ---- */
+      /* Mockup de solo layout: el botón "Crear" no ejecuta ninguna acción. */
+      $('cancelBtn').addEventListener('click', openCreate);
+      document.querySelectorAll('.breadcrumb a').forEach(function (el) {
+        el.addEventListener('click', function (e) { e.preventDefault(); openCreate(); });
+      });
+      $('fTipoArmado').addEventListener('change', function () {
+        refreshConditionalFields();
+        populateMatrices();
+        applySiteDefaults();
+      });
+      $('fTipoTarima').addEventListener('change', applyTarimaDims);
+      $('fLogicaEtiquetas').addEventListener('click', function () {
+        setLogicaEtiquetas(!isLogicaEtiquetasOn());
+      });
+      $('fLogicaEtiquetas').addEventListener('keydown', function (e) {
+        if (e.key === ' ' || e.key === 'Enter') {
+          e.preventDefault();
+          setLogicaEtiquetas(!isLogicaEtiquetasOn());
+        }
+      });
+
+      /* ---- Init ---- */
+      populateTarimas();
+      populateTipoEtiqueta();
+      buildTransportGrid();
+      openCreate();
+    })();
+  </script>
+</body>
+</html>
